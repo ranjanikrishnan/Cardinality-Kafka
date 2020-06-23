@@ -1,7 +1,17 @@
 from kafka import KafkaProducer
+import jsonlines
+import json
 
 
 producer = KafkaProducer(bootstrap_servers=['localhost:9092'])
-print('producer: ', producer)
-for i in range(10):
-    producer.send('test', b'Hello, World!').get(timeout=60)
+
+filename = 'temp.jsonl'
+with jsonlines.open(filename) as f:
+    for line in f:
+        try:
+            line = f.read()
+            print('line: ', line)
+            data = producer.send('sample', json.dumps(line).encode('utf-8'))
+            data.get(timeout=60)
+        except EOFError:
+            break
