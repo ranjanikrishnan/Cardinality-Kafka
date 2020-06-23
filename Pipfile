@@ -9,6 +9,8 @@ verify_ssl = true
 pylint = "*"
 flake8 = "*"
 kafka-python = "*"
+jsonlines = "*"
+faust = "*"
 
 [requires]
 python_version = "3.7"
