@@ -6,7 +6,7 @@
 
 - Docker
 - Docker-compose
-- Please find all the project dependencies in Pipfile
+- Please find all the project dependencies in requirements.txt
 
 ### Project Setup
 
@@ -48,6 +48,37 @@
 
 5. Count distinct elements in a stream
 
+- For counting distinct items in a kafka stream, 
+    [Faust](https://faust.readthedocs.io/en/latest/) has been used, which is a stream processing library
+    Run the following:
+    - In a terminal window, start the faust worker
+        ```
+        cd src/distinct_counter
+        ```
+        ```
+        faust -A sample worker -l info
+        ```
+    - Publish the data using the producer
+        ```
+        python src/kafka/producer.py
+        ```
+    - Run the consumer and listen to the topic to which the faust worker writes the output 
+        ```
+        ./kafka-console-consumer.sh --from-beginning --bootstrap-server kafka:9092 --topic=sample-sample-changelog
+        ```
+
+6. Benchmark
+   - To be added
+
+7. Output to a new Kafka Topic instead of stdout
+    - Already done in step 5
+    - Faust writes the output to a new topic
+    - By default the changelog topic for a given Table has the format <app_id>-<table_name>-changelog
+
+ - Alternatively some efficient cardinality algorithms can be used:
+    - Hashset
+    - Hyperloglog
+- Refer [here](big-data-counting-how-to-count-a-billion-distinct-objects)
 
 
 ### Project Details
