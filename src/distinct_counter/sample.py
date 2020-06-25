@@ -15,12 +15,15 @@ class StreamData(faust.Record):
 sample_topic = app.topic('sample', value_type=StreamData)
 print('sample_topic: ', sample_topic)
 
-page_views = app.Table('sample', default=int).tumbling(60.0, expires=60.0)
+streaming_data_table = app.Table('sample', default=int).tumbling(60.0, expires=60.0)
+
+distinct_count = app.Table('distinct_count', default=int).tumbling(60.0, expires=60.0)
 
 
 @app.agent(sample_topic)
-async def count_page_views(views):
+async def count_streaming_data_table(views):
     async for view in views.group_by(StreamData.uid):
-        # print(view)
-        print(view.uid)
-        # page_views[view.uid] += 1
+        uid = view.uid
+        streaming_data_table[uid] += 1
+        if streaming_data_table[uid].current() == 1:
+            distinct_count['total'] += 1
