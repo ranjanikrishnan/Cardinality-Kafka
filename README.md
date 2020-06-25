@@ -21,7 +21,7 @@
     sudo docker exec -it kafka /bin/sh
     ```
     ```
-    /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic test
+    /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic sample
     ```
 
 3. Sending test data to kafka topic using kafka producer
@@ -78,9 +78,14 @@
  - Alternatively some efficient cardinality algorithms can be used:
     - Hashset
     - Hyperloglog
-- Refer [here](big-data-counting-how-to-count-a-billion-distinct-objects)
+- Refer [here](http://highscalability.com/blog/2012/4/5/big-data-counting-how-to-count-a-billion-distinct-objects-us.html)
 
 
 ### Project Details
 
 - To be added
+
+### References
+- http://highscalability.com/blog/2012/4/5/big-data-counting-how-to-count-a-billion-distinct-objects-us.html
+
+- https://faust.readthedocs.io/en/latest/
