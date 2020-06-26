@@ -24,6 +24,12 @@
     /opt/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic kafka_distinct_counter
     ```
 
+- Export environment variables within the .env file
+
+    ```
+    export $(cat .env | grep -v ^# | xargs)
+    ```
+
 3. Sending test data to kafka topic using kafka producer
     - Run the following command from inside the docker container
         ```
