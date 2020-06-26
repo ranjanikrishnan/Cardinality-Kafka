@@ -93,9 +93,11 @@
 - Refer [here](http://highscalability.com/blog/2012/4/5/big-data-counting-how-to-count-a-billion-distinct-objects-us.html)
 
 
-### Project Details
+### Project Improvements
 
-- To be added
+- Dynamically configure the interval for the count of unique users (per-minute/per-hour/per-day)
+- Store each configurable interval counts with timestamp in a separate topic
+- For scalability, define kafka nodes which would read from one or more topics and generate unique users count accordingly
 
 ### References
 - http://highscalability.com/blog/2012/4/5/big-data-counting-how-to-count-a-billion-distinct-objects-us.html
