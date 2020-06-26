@@ -8,7 +8,6 @@ services:
   kafka:
     container_name: kafka
     image: wurstmeister/kafka
-    build: .
     ports:
       - "9092:9092"
     environment:
