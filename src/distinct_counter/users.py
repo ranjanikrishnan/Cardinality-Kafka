@@ -11,6 +11,9 @@ app = faust.App(
 
 
 class StreamData(faust.Record):
+    """
+    model for stream data
+    """
     uid: str
     ts: str
 
@@ -18,6 +21,7 @@ class StreamData(faust.Record):
 distinct_counter_topic = app.topic('kafka_distinct_counter',
                                    value_type=StreamData)
 
+# define tables for storing aggregated data
 streaming_data_table = app.Table('grouped', default=int)\
                           .tumbling(60.0, expires=60.0)
 
@@ -27,6 +31,9 @@ distinct_count = app.Table('unique', default=int)\
 
 @app.agent(distinct_counter_topic)
 async def count_streaming_data_table(messages):
+    """
+    count unique users per minute
+    """
     async for message in messages.group_by(StreamData.uid):
         uid = message.uid
         streaming_data_table[uid] += 1
@@ -34,3 +41,7 @@ async def count_streaming_data_table(messages):
             distinct_count['total'] += 1
             print(f'current unique user count per min: \
                 {distinct_count["total"].current()}')
+
+
+if __name__ == '__main__':
+    app.main()
