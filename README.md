@@ -1,12 +1,13 @@
-# Data Engineering - Kafka
+# Cardinality - Kafka
 
-- A detailed project description can be found [here](https://github.com/tamediadigital/hiring-challenges/tree/master/data-engineer-challenge)
+- Stream data from Kafka and count the number of distinct values (cardinality) in the data.
+- For our use case, we calculate unique users per minute
 
 ### Prerequisites
 
 - Docker
 - Docker-compose
-- Please find all the project dependencies in requirements.txt
+- Please find all the project dependencies in requirements.txt (Ideally use a virtual env)
 
 ### Project Setup
 
@@ -31,22 +32,17 @@
     ```
 
 3. Sending test data to kafka topic using kafka producer
+    - Copy data from host to docker container
+        ```
+        docker cp data/stream.jsonl kafka:/stream.jsonl
+        ```
     - Run the following command from inside the docker container
-        ```
-        wget http://tx.tamedia.ch.s3.amazonaws.com/challenge/data/stream.jsonl.gz
-        ```
-        ```
-        gunzip stream.jsonl.gz
-        ```
         ```
         cat stream.jsonl | opt/kafka/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic kafka_distinct_counter
         ```
     - Alternatively run the following (outside the container, within the project folder)
         ```
-        wget http://tx.tamedia.ch.s3.amazonaws.com/challenge/data/stream.jsonl.gz
-        ```
-        ```
-        gunzip stream.jsonl.gz
+        gunzip data/stream.jsonl.gz
         ```
         ```
         python src/kafka/producer.py
@@ -60,8 +56,7 @@
 
 5. Count distinct elements in a stream
 
-- For counting distinct items in a kafka stream, 
-    [Faust](https://faust.readthedocs.io/en/latest/) has been used, which is a stream processing library
+- For counting distinct items in a kafka stream, we have used [Faust](https://faust.readthedocs.io/en/latest/), which is a stream processing library
 - Run the following:
     - In a terminal window, start the faust worker
         ```
@@ -79,13 +74,8 @@
         opt/kafka/bin/kafka-console-consumer.sh --from-beginning --bootstrap-server kafka:9092 --topic=users-unique-changelog
         ```
 
-6. Benchmark
-   - To be added
-
-7. Output to a new Kafka Topic instead of stdout
-    - Already done in step 5
-    - Faust writes the output to a new topic
-    - By default the changelog topic for a given Table has the format <app_id>-<table_name>-changelog
+- Faust writes the output to a new topic
+- By default the changelog topic for a given Table has the format <app_id>-<table_name>-changelog
 
  - Alternatively some efficient cardinality algorithms can be used:
     - Hashset
